@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prompt Pilot</title>
+<title>Prompt Pilot V2.6</title>
 
 <style>
 * {
@@ -20,17 +20,17 @@ body {
 
 .container {
   width: 92%;
-  max-width: 900px;
-  margin: 30px auto;
+  max-width: 1000px;
+  margin: 25px auto;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
 }
 
 .logo {
-  font-size: 42px;
+  font-size: 38px;
   font-weight: bold;
 }
 
@@ -41,21 +41,21 @@ body {
 
 .card {
   background: #1e293b;
-  padding: 22px;
+  padding: 20px;
   border-radius: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 label {
   display: block;
-  margin: 15px 0 8px;
+  margin: 14px 0 8px;
   font-weight: bold;
 }
 
 textarea,
 select {
   width: 100%;
-  padding: 14px;
+  padding: 13px;
   border-radius: 10px;
   border: 1px solid #334155;
   background: #0f172a;
@@ -64,30 +64,57 @@ select {
 }
 
 textarea {
-  min-height: 150px;
+  min-height: 140px;
   resize: vertical;
 }
 
 button {
   width: 100%;
-  padding: 15px;
-  margin-top: 18px;
+  padding: 14px;
+  margin-top: 12px;
   border: 0;
   border-radius: 10px;
-  background: #6366f1;
   color: white;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-}
-
-button:hover {
-  background: #4f46e5;
 }
 
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.generate {
+  background: #6366f1;
+}
+
+.generate:hover {
+  background: #4f46e5;
+}
+
+.improve {
+  background: #f59e0b;
+}
+
+.improve:hover {
+  background: #d97706;
+}
+
+.copy {
+  background: #10b981;
+}
+
+.copy:hover {
+  background: #059669;
+}
+
+.download {
+  background: #0ea5e9;
+}
+
+.clear {
+  background: #475569;
 }
 
 .result {
@@ -100,26 +127,102 @@ button:disabled {
   line-height: 1.8;
   direction: ltr;
   text-align: left;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
-.copy {
-  background: #10b981;
+.scoreBox {
+  display: none;
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #111827;
+  border: 1px solid #334155;
 }
 
-.copy:hover {
-  background: #059669;
+.scoreNumber {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.clear {
-  background: #475569;
+.compare {
+  display: none;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.compareBox {
+  flex: 1;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.compareBox h3 {
+  margin-top: 0;
+}
+
+.historyItem {
+  background: #0f172a;
+  border: 1px solid #334155;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.historyItem:hover {
+  border-color: #6366f1;
+}
+
+.templateButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.templateButtons button {
+  margin-top: 0;
+  background: #334155;
+}
+
+.status {
+  display: none;
+  text-align: center;
+  margin-top: 12px;
+  color: #94a3b8;
+}
+
+.error {
+  display: none;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #450a0a;
+  border: 1px solid #7f1d1d;
+  color: #fecaca;
 }
 
 .footer {
   text-align: center;
   color: #64748b;
   font-size: 13px;
-  margin-top: 25px;
+  margin-top: 22px;
+}
+
+@media (max-width: 700px) {
+  .compare {
+    flex-direction: column;
+  }
+
+  .templateButtons {
+    grid-template-columns: 1fr;
+  }
+
+  .logo {
+    font-size: 32px;
+  }
 }
 </style>
 </head>
@@ -130,11 +233,12 @@ button:disabled {
 
   <div class="header">
     <div class="logo">🚀 Prompt Pilot</div>
-
     <div class="subtitle">
       حوّل فكرتك إلى Prompt احترافي جاهز للاستخدام
     </div>
   </div>
+
+  <!-- GENERATOR -->
 
   <div class="card">
 
@@ -155,6 +259,8 @@ button:disabled {
       <option value="تسويق">تسويق وإعلان</option>
       <option value="بيزنس">Business</option>
       <option value="سوشيال ميديا">Social Media</option>
+      <option value="برمجة">Coding</option>
+      <option value="تعليم">Education</option>
     </select>
 
     <label>🤖 الأداة المستهدفة</label>
@@ -166,175 +272,830 @@ button:disabled {
       <option value="Midjourney">Midjourney</option>
       <option value="Image AI">Image AI</option>
       <option value="Video AI">Video AI</option>
+      <option value="Coding AI">Coding AI</option>
     </select>
 
-    <button id="generateButton" onclick="generatePrompt()">
-      ✨ إنشاء Prompt
+    <button
+      id="generateButton"
+      class="generate"
+      onclick="generatePrompt()"
+    >
+      ✨ إنشاء Prompt احترافي
     </button>
+
+    <div id="status" class="status">
+      ⏳ جاري تحليل الفكرة وبناء الـPrompt...
+    </div>
+
+    <div id="error" class="error"></div>
 
   </div>
 
+  <!-- RESULT -->
+
   <div class="card">
 
-    <label>📋 الـ Prompt الناتج</label>
+    <label>📋 الـPrompt الناتج</label>
 
     <div id="result" class="result">
       سيظهر الـPrompt هنا...
     </div>
 
-    <button class="copy" onclick="copyPrompt()">
+    <div id="scoreBox" class="scoreBox">
+      <div>📊 Prompt Score</div>
+      <div id="scoreNumber" class="scoreNumber">--/100</div>
+      <div id="scoreText"></div>
+    </div>
+
+    <button
+      id="improveButton"
+      class="improve"
+      onclick="improvePrompt()"
+    >
+      🛠️ تحسين الـPrompt
+    </button>
+
+    <button
+      class="copy"
+      onclick="copyPrompt()"
+    >
       📋 نسخ الـPrompt
     </button>
 
-    <button class="clear" onclick="clearAll()">
+    <button
+      class="download"
+      onclick="downloadPrompt()"
+    >
+      ⬇️ تحميل الـPrompt
+    </button>
+
+    <button
+      class="clear"
+      onclick="clearAll()"
+    >
       🗑️ مسح
     </button>
 
   </div>
 
+  <!-- COMPARE -->
+
+  <div id="compare" class="card compare">
+
+    <div class="compareBox">
+      <h3>📄 Original</h3>
+      <div id="originalPrompt" class="result"></div>
+      <strong id="originalScore"></strong>
+    </div>
+
+    <div class="compareBox">
+      <h3>✨ Improved</h3>
+      <div id="improvedPrompt" class="result"></div>
+      <strong id="improvedScore"></strong>
+    </div>
+
+  </div>
+
+  <!-- TEMPLATES -->
+
+  <div class="card">
+
+    <label>📚 قوالب سريعة</label>
+
+    <div class="templateButtons">
+
+      <button onclick="useTemplate('تسويق')">
+        📣 Marketing
+      </button>
+
+      <button onclick="useTemplate('سوشيال ميديا')">
+        📱 Social Media
+      </button>
+
+      <button onclick="useTemplate('يوتيوب')">
+        ▶️ YouTube
+      </button>
+
+      <button onclick="useTemplate('صورة')">
+        🎨 Image
+      </button>
+
+      <button onclick="useTemplate('فيديو')">
+        🎬 Video
+      </button>
+
+      <button onclick="useTemplate('بيزنس')">
+        💼 Business
+      </button>
+
+      <button onclick="useTemplate('برمجة')">
+        💻 Coding
+      </button>
+
+      <button onclick="useTemplate('تعليم')">
+        🎓 Education
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- HISTORY -->
+
+  <div class="card">
+
+    <label>💾 آخر الـPrompts</label>
+
+    <div id="history">
+      لا يوجد سجل حتى الآن.
+    </div>
+
+    <button
+      class="clear"
+      onclick="clearHistory()"
+    >
+      🗑️ مسح السجل
+    </button>
+
+  </div>
+
   <div class="footer">
-    Prompt Pilot © 2026
+    Prompt Pilot V2.6 © 2026
   </div>
 
 </div>
 
 <script>
 
-const WORKER_URL =
+const API_URL =
   "https://prompt-pilot-api.matrx10.workers.dev/";
+
+const PLACEHOLDER =
+  "سيظهر الـPrompt هنا...";
+
+let currentPrompt = "";
+let currentOriginalPrompt = "";
+let currentImprovedPrompt = "";
+
+
+/* =========================
+   API REQUEST
+========================= */
+
+async function callAPI(payload) {
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  let data;
+
+  try {
+    data = await response.json();
+  } catch (error) {
+    throw new Error(
+      "الخادم أرسل استجابة غير مفهومة."
+    );
+  }
+
+  if (!response.ok || !data.success) {
+    throw new Error(
+      data.error || "حدث خطأ أثناء الاتصال بالخادم."
+    );
+  }
+
+  return data;
+}
+
+
+/* =========================
+   GENERATE
+========================= */
 
 async function generatePrompt() {
 
   const idea =
     document.getElementById("idea").value.trim();
 
-  const type =
+  const contentType =
     document.getElementById("type").value;
 
-  const tool =
+  const targetTool =
     document.getElementById("tool").value;
-
-  const result =
-    document.getElementById("result");
-
-  const button =
-    document.getElementById("generateButton");
 
   if (!idea) {
 
-    result.textContent =
-      "⚠️ اكتب فكرتك أولاً.";
+    showError(
+      "⚠️ اكتب فكرتك أولاً."
+    );
 
     return;
   }
 
-  button.disabled = true;
+  setLoading(true);
 
-  button.textContent =
-    "⏳ جاري إنشاء الـPrompt...";
-
-  result.textContent =
-    "🤖 الذكاء الاصطناعي يعمل الآن...";
+  hideError();
 
   try {
 
-    const response = await fetch(WORKER_URL, {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-
-        idea: idea,
-
-        contentType: type,
-
-        targetTool: tool
-
-      })
-
+    const data = await callAPI({
+      action: "generate",
+      idea: idea,
+      contentType: contentType,
+      targetTool: targetTool
     });
 
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-
+    if (!data.prompt) {
       throw new Error(
-        data.error ||
-        "حدث خطأ أثناء إنشاء الـPrompt."
+        "تم الاتصال بالخادم ولكن لم يتم استلام Prompt."
       );
-
     }
 
-    result.textContent =
-      data.prompt;
+    currentPrompt = data.prompt;
+    currentOriginalPrompt = "";
+    currentImprovedPrompt = "";
+
+    document.getElementById("result")
+      .textContent = data.prompt;
+
+    showScore(data.score);
+
+    document.getElementById("compare")
+      .style.display = "none";
+
+    saveHistory({
+      prompt: data.prompt,
+      tool: targetTool,
+      type: contentType,
+      date: new Date().toLocaleString("ar-EG")
+    });
+
+    renderHistory();
 
   } catch (error) {
 
-    console.error(error);
-
-    result.textContent =
-      "❌ حدث خطأ:\n\n" +
-      error.message;
+    showError(
+      "❌ " +
+      (error.message ||
+        "حدث خطأ غير متوقع.")
+    );
 
   } finally {
 
-    button.disabled = false;
-
-    button.textContent =
-      "✨ إنشاء Prompt";
+    setLoading(false);
 
   }
 }
 
 
-function copyPrompt() {
+/* =========================
+   IMPROVE
+========================= */
 
-  const text =
-    document.getElementById("result").textContent;
+async function improvePrompt() {
+
+  const prompt =
+    document.getElementById("result")
+      .textContent.trim();
+
+  const targetTool =
+    document.getElementById("tool").value;
 
   if (
-    !text ||
-    text === "سيظهر الـPrompt هنا..." ||
-    text.startsWith("🤖") ||
-    text.startsWith("❌")
+    !prompt ||
+    prompt === PLACEHOLDER
   ) {
 
-    alert("⚠️ أنشئ Prompt أولاً.");
+    showError(
+      "⚠️ أنشئ Prompt أولاً."
+    );
 
     return;
   }
 
-  navigator.clipboard.writeText(text)
+  setLoading(true);
 
-    .then(() => {
+  hideError();
 
-      alert("✅ تم نسخ الـPrompt");
+  try {
 
-    })
-
-    .catch(() => {
-
-      alert("❌ تعذر النسخ تلقائيًا.");
-
+    const data = await callAPI({
+      action: "improve",
+      prompt: prompt,
+      targetTool: targetTool
     });
 
+    if (!data.improvedPrompt) {
+      throw new Error(
+        "لم يتم استلام الـPrompt المحسن."
+      );
+    }
+
+    currentOriginalPrompt =
+      data.originalPrompt || prompt;
+
+    currentImprovedPrompt =
+      data.improvedPrompt;
+
+    currentPrompt =
+      data.improvedPrompt;
+
+    document.getElementById("result")
+      .textContent =
+        data.improvedPrompt;
+
+    document.getElementById("originalPrompt")
+      .textContent =
+        currentOriginalPrompt;
+
+    document.getElementById("improvedPrompt")
+      .textContent =
+        currentImprovedPrompt;
+
+    document.getElementById("originalScore")
+      .textContent =
+        "Score: " +
+        (data.originalScore ?? "--") +
+        "/100";
+
+    document.getElementById("improvedScore")
+      .textContent =
+        "Score: " +
+        (data.improvedScore ?? "--") +
+        "/100";
+
+    document.getElementById("compare")
+      .style.display = "flex";
+
+    showScore(
+      data.improvedScore
+    );
+
+    saveHistory({
+      prompt: data.improvedPrompt,
+      tool: targetTool,
+      type: "Improved",
+      date: new Date().toLocaleString("ar-EG")
+    });
+
+    renderHistory();
+
+  } catch (error) {
+
+    showError(
+      "❌ " +
+      (error.message ||
+        "حدث خطأ أثناء تحسين الـPrompt.")
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
 }
 
+
+/* =========================
+   SCORE
+========================= */
+
+function showScore(score) {
+
+  const box =
+    document.getElementById("scoreBox");
+
+  if (
+    typeof score !== "number"
+  ) {
+
+    box.style.display = "none";
+
+    return;
+  }
+
+  document.getElementById("scoreNumber")
+    .textContent =
+      score + "/100";
+
+  let text = "";
+
+  if (score >= 85) {
+    text =
+      "🔥 Prompt قوي جدًا وجاهز للاستخدام.";
+  } else if (score >= 70) {
+    text =
+      "👍 Prompt جيد ويحتاج تحسينات بسيطة.";
+  } else if (score >= 50) {
+    text =
+      "⚠️ Prompt متوسط ويمكن تحسينه.";
+  } else {
+    text =
+      "🛠️ يحتاج إلى تحسين كبير.";
+  }
+
+  document.getElementById("scoreText")
+    .textContent = text;
+
+  box.style.display = "block";
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+function setLoading(isLoading) {
+
+  const generateButton =
+    document.getElementById(
+      "generateButton"
+    );
+
+  const improveButton =
+    document.getElementById(
+      "improveButton"
+    );
+
+  const status =
+    document.getElementById("status");
+
+  generateButton.disabled =
+    isLoading;
+
+  improveButton.disabled =
+    isLoading;
+
+  status.style.display =
+    isLoading
+      ? "block"
+      : "none";
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+function showError(message) {
+
+  const error =
+    document.getElementById("error");
+
+  error.textContent = message;
+
+  error.style.display = "block";
+}
+
+function hideError() {
+
+  document.getElementById("error")
+    .style.display = "none";
+}
+
+
+/* =========================
+   COPY
+========================= */
+
+async function copyPrompt() {
+
+  const text =
+    document.getElementById("result")
+      .textContent.trim();
+
+  if (
+    !text ||
+    text === PLACEHOLDER
+  ) {
+
+    alert(
+      "⚠️ أنشئ Prompt أولاً."
+    );
+
+    return;
+  }
+
+  try {
+
+    await navigator.clipboard
+      .writeText(text);
+
+    alert(
+      "✅ تم نسخ الـPrompt."
+    );
+
+  } catch (error) {
+
+    alert(
+      "❌ تعذر النسخ تلقائيًا."
+    );
+
+  }
+}
+
+
+/* =========================
+   DOWNLOAD
+========================= */
+
+function downloadPrompt() {
+
+  const text =
+    document.getElementById("result")
+      .textContent.trim();
+
+  if (
+    !text ||
+    text === PLACEHOLDER
+  ) {
+
+    alert(
+      "⚠️ أنشئ Prompt أولاً."
+    );
+
+    return;
+  }
+
+  const blob =
+    new Blob(
+      [text],
+      {
+        type:
+          "text/plain;charset=utf-8"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    "prompt-pilot-prompt.txt";
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  link.remove();
+
+  URL.revokeObjectURL(url);
+}
+
+
+/* =========================
+   CLEAR
+========================= */
 
 function clearAll() {
 
-  document.getElementById("idea").value = "";
+  document.getElementById("idea")
+    .value = "";
 
-  document.getElementById("result").textContent =
-    "سيظهر الـPrompt هنا...";
+  document.getElementById("result")
+    .textContent = PLACEHOLDER;
+
+  document.getElementById("scoreBox")
+    .style.display = "none";
+
+  document.getElementById("compare")
+    .style.display = "none";
+
+  hideError();
+
+  currentPrompt = "";
+  currentOriginalPrompt = "";
+  currentImprovedPrompt = "";
+}
+
+
+/* =========================
+   TEMPLATES
+========================= */
+
+function useTemplate(type) {
+
+  const idea =
+    document.getElementById("idea");
+
+  const content =
+    document.getElementById("type");
+
+  const templates = {
+
+    "تسويق":
+      "اكتب إعلانًا تسويقيًا احترافيًا لمنتج أو خدمة مع التركيز على الجمهور المستهدف والفوائد وCTA.",
+
+    "سوشيال ميديا":
+      "أنشئ فكرة محتوى قوية لمنصات التواصل الاجتماعي مع Hook جذاب وCTA مناسب.",
+
+    "يوتيوب":
+      "أنشئ فكرة فيديو YouTube جذابة مع عنوان قوي وHook وهيكل للفيديو وCTA.",
+
+    "صورة":
+      "أنشئ Prompt احترافي لتوليد صورة واقعية ومفصلة.",
+
+    "فيديو":
+      "أنشئ Prompt احترافي لتوليد فيديو قصير مع وصف المشهد والحركة والكاميرا والإضاءة.",
+
+    "بيزنس":
+      "حلل فكرة مشروع تجاري واقترح استراتيجية عملية قابلة للتنفيذ مع المخاطر والفرص.",
+
+    "برمجة":
+      "اكتب Prompt احترافي لمساعد برمجي لتنفيذ مهمة برمجية مع المتطلبات والقيود والاختبارات.",
+
+    "تعليم":
+      "أنشئ Prompt لشرح موضوع تعليمي بطريقة مبسطة مع أمثلة وتمارين واختبار."
+  };
+
+  idea.value =
+    templates[type] || "";
+
+  content.value =
+    type;
+
+  idea.focus();
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+function getHistory() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(
+        "promptPilotHistory"
+      ) || "[]"
+    );
+
+  } catch (error) {
+
+    return [];
+
+  }
+}
+
+
+function saveHistory(item) {
+
+  try {
+
+    const history =
+      getHistory();
+
+    history.unshift(item);
+
+    const limited =
+      history.slice(0, 10);
+
+    localStorage.setItem(
+      "promptPilotHistory",
+      JSON.stringify(limited)
+    );
+
+  } catch (error) {
+
+    console.log(
+      "History storage unavailable."
+    );
+
+  }
+}
+
+
+function renderHistory() {
+
+  const container =
+    document.getElementById(
+      "history"
+    );
+
+  const history =
+    getHistory();
+
+  if (!history.length) {
+
+    container.textContent =
+      "لا يوجد سجل حتى الآن.";
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  history.forEach(
+    (item, index) => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "historyItem";
+
+      const preview =
+        item.prompt.length > 140
+          ? item.prompt.substring(
+              0,
+              140
+            ) + "..."
+          : item.prompt;
+
+      div.innerHTML =
+        "<strong>" +
+        escapeHTML(
+          item.type
+        ) +
+        "</strong><br>" +
+        escapeHTML(
+          item.tool
+        ) +
+        "<br>" +
+        escapeHTML(
+          item.date
+        ) +
+        "<br><br>" +
+        escapeHTML(
+          preview
+        );
+
+      div.onclick =
+        function () {
+
+          currentPrompt =
+            item.prompt;
+
+          document.getElementById(
+            "result"
+          ).textContent =
+            item.prompt;
+
+          document.getElementById(
+            "scoreBox"
+          ).style.display =
+            "none";
+
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+        };
+
+      container.appendChild(div);
+
+    }
+  );
+}
+
+
+/* =========================
+   CLEAR HISTORY
+========================= */
+
+function clearHistory() {
+
+  localStorage.removeItem(
+    "promptPilotHistory"
+  );
+
+  renderHistory();
 
 }
+
+
+/* =========================
+   SAFE HTML
+========================= */
+
+function escapeHTML(text) {
+
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+renderHistory();
 
 </script>
 
 </body>
-</html>
+  </html>
