@@ -85,6 +85,11 @@ button:hover {
   background: #4f46e5;
 }
 
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .result {
   background: #0f172a;
   border: 1px solid #334155;
@@ -95,6 +100,7 @@ button:hover {
   line-height: 1.8;
   direction: ltr;
   text-align: left;
+  overflow-wrap: break-word;
 }
 
 .copy {
@@ -124,6 +130,7 @@ button:hover {
 
   <div class="header">
     <div class="logo">🚀 Prompt Pilot</div>
+
     <div class="subtitle">
       حوّل فكرتك إلى Prompt احترافي جاهز للاستخدام
     </div>
@@ -161,7 +168,7 @@ button:hover {
       <option value="Video AI">Video AI</option>
     </select>
 
-    <button onclick="generatePrompt()">
+    <button id="generateButton" onclick="generatePrompt()">
       ✨ إنشاء Prompt
     </button>
 
@@ -193,66 +200,130 @@ button:hover {
 
 <script>
 
-function generatePrompt() {
+const WORKER_URL =
+  "https://prompt-pilot-api.matrx10.workers.dev/";
 
-  const idea = document.getElementById("idea").value.trim();
-  const type = document.getElementById("type").value;
-  const tool = document.getElementById("tool").value;
-  const result = document.getElementById("result");
+async function generatePrompt() {
+
+  const idea =
+    document.getElementById("idea").value.trim();
+
+  const type =
+    document.getElementById("type").value;
+
+  const tool =
+    document.getElementById("tool").value;
+
+  const result =
+    document.getElementById("result");
+
+  const button =
+    document.getElementById("generateButton");
 
   if (!idea) {
-    result.textContent = "⚠️ اكتب فكرتك أولاً.";
+
+    result.textContent =
+      "⚠️ اكتب فكرتك أولاً.";
+
     return;
   }
 
-  const prompt =
-`You are an expert prompt engineer.
+  button.disabled = true;
 
-OBJECTIVE:
-${idea}
+  button.textContent =
+    "⏳ جاري إنشاء الـPrompt...";
 
-CONTENT TYPE:
-${type}
+  result.textContent =
+    "🤖 الذكاء الاصطناعي يعمل الآن...";
 
-TARGET AI TOOL:
-${tool}
+  try {
 
-ROLE:
-Act as a professional expert specialized in creating high-quality prompts for the selected AI tool.
+    const response = await fetch(WORKER_URL, {
 
-INSTRUCTIONS:
-1. Understand the user's objective.
-2. Improve and structure the idea.
-3. Add useful details when necessary.
-4. Keep the original intent unchanged.
-5. Make the prompt specific and actionable.
-6. Optimize the prompt for the selected AI tool.
-7. Avoid unnecessary information.
-8. Produce a professional result ready to copy and use.
+      method: "POST",
 
-OUTPUT:
-Return only the final optimized prompt.`;
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-  result.textContent = prompt;
+      body: JSON.stringify({
+
+        idea: idea,
+
+        contentType: type,
+
+        targetTool: tool
+
+      })
+
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.error ||
+        "حدث خطأ أثناء إنشاء الـPrompt."
+      );
+
+    }
+
+    result.textContent =
+      data.prompt;
+
+  } catch (error) {
+
+    console.error(error);
+
+    result.textContent =
+      "❌ حدث خطأ:\n\n" +
+      error.message;
+
+  } finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "✨ إنشاء Prompt";
+
+  }
 }
+
 
 function copyPrompt() {
 
-  const text = document.getElementById("result").textContent;
+  const text =
+    document.getElementById("result").textContent;
 
-  if (!text || text === "سيظهر الـPrompt هنا...") {
+  if (
+    !text ||
+    text === "سيظهر الـPrompt هنا..." ||
+    text.startsWith("🤖") ||
+    text.startsWith("❌")
+  ) {
+
     alert("⚠️ أنشئ Prompt أولاً.");
+
     return;
   }
 
   navigator.clipboard.writeText(text)
+
     .then(() => {
+
       alert("✅ تم نسخ الـPrompt");
+
     })
+
     .catch(() => {
+
       alert("❌ تعذر النسخ تلقائيًا.");
+
     });
+
 }
+
 
 function clearAll() {
 
@@ -260,6 +331,7 @@ function clearAll() {
 
   document.getElementById("result").textContent =
     "سيظهر الـPrompt هنا...";
+
 }
 
 </script>
