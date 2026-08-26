@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Prompt Pilot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 900px;
+      margin: 40px auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 17px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 25px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    textarea,
+    select,
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      background: #0f172a;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    select,
+    input {
+      margin-bottom: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #6366f1;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #4f46e5;
+    }
+
+    .result {
+      white-space: pre-wrap;
+      line-height: 1.8;
+      background: #0f172a;
+      padding: 20px;
+      border-radius: 12px;
+      min-height: 120px;
+      color: #e2e8f0;
+    }
+
+    .copy {
+      margin-top: 12px;
+      background: #10b981;
+    }
+
+    .copy:hover {
+      background: #059669;
+    }
+
+    .footer {
+      text-align: center;
+      color: #64748b;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>🚀 Prompt Pilot</h1>
+      <p>حوّل فكرتك البسيطة إلى Prompt احترافي</p>
+    </div>
+
+    <div class="card">
+
+      <label>💡 اكتب فكرتك</label>
+
+      <textarea
+        id="idea"
+        placeholder="مثال: أريد عمل فيديو عن الذكاء الاصطناعي..."
+      ></textarea>
+
+      <label>🎯 نوع المحتوى</label>
+
+      <select id="type">
+        <option value="general">عام</option>
+        <option value="image">توليد صورة</option>
+        <option value="video">توليد فيديو</option>
+        <option value="youtube">يوتيوب</option>
+        <option value="marketing">تسويق وإعلان</option>
+        <option value="business">بيزنس</option>
+        <option value="social">سوشيال ميديا</option>
+      </select>
+
+      <label>🤖 الأداة المستهدفة</label>
+
+      <select id="tool">
+        <option value="ChatGPT">ChatGPT</option>
+        <option value="Gemini">Gemini</option>
+        <option value="Claude">Claude</option>
+        <option value="Midjourney">Midjourney</option>
+        <option value="Image AI">Image AI</option>
+        <option value="Video AI">Video AI</option>
+      </select>
+
+      <button onclick="generatePrompt()">
+        ✨ إنشاء Prompt احترافي
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <label>📋 النتيجة</label>
+
+      <div id="result" class="result">
+        الـ Prompt سيظهر هنا...
+      </div>
+
+      <button class="copy" onclick="copyPrompt()">
+        📋 نسخ الـ Prompt
+      </button>
+
+    </div>
+
+    <div class="footer">
+      Prompt Pilot © 2026
+    </div>
+
+  </div>
+
+  <script>
+
+    function generatePrompt() {
+
+      const idea = document.getElementById("idea").value.trim();
+      const type = document.getElementById("type").value;
+      const tool = document.getElementById("tool").value;
+      const result = document.getElementById("result");
+
+      if (!idea) {
+        result.innerText = "⚠️ اكتب فكرتك أولاً.";
+        return;
+      }
+
+      let prompt = "";
+
+      prompt += "أنت خبير محترف في كتابة الـ Prompts.\\n\\n";
+
+      prompt += "المهمة:\\n";
+      prompt += idea + "\\n\\n";
+
+      prompt += "نوع المحتوى: ";
+      prompt += type + "\\n\\n";
+
+      prompt += "الأداة المستهدفة: ";
+      prompt += tool + "\\n\\n";
+
+      prompt += "التعليمات:\\n";
+      prompt += "- افهم الهدف الأساسي من الفكرة.\\n";
+      prompt += "- حسّن الفكرة وحوّلها إلى Prompt واضح ومحدد.\\n";
+      prompt += "- استخدم تفاصيل عملية قابلة للتنفيذ.\\n";
+      prompt += "- لا تضف معلومات غير مطلوبة.\\n";
+      prompt += "- اجعل النتيجة احترافية ومناسبة للأداة المستهدفة.\\n";
+      prompt += "- إذا كانت هناك معلومات ناقصة، استخدم أفضل افتراض منطقي.\\n\\n";
+
+      prompt += "أخرج النتيجة كـ Prompt جاهز للنسخ والاستخدام.";
+
+      result.innerText = prompt;
+    }
+
+    function copyPrompt() {
+
+      const text = document.getElementById("result").innerText;
+
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          alert("✅ تم نسخ الـ Prompt");
+        })
+        .catch(() => {
+          alert("❌ لم يتم النسخ تلقائياً");
+        });
+
+    }
+
+  </script>
+
+</body>
+        </html>
