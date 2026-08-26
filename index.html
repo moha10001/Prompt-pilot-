@@ -1,247 +1,268 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Prompt Pilot</title>
+<title>Prompt Pilot</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-    body {
-      margin: 0;
-      background: #0f172a;
-      color: #ffffff;
-    }
+body {
+  margin: 0;
+  background: #0f172a;
+  color: #fff;
+}
 
-    .container {
-      width: 92%;
-      max-width: 900px;
-      margin: 40px auto;
-    }
+.container {
+  width: 92%;
+  max-width: 900px;
+  margin: 30px auto;
+}
 
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
 
-    .header h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
+.logo {
+  font-size: 42px;
+  font-weight: bold;
+}
 
-    .header p {
-      color: #94a3b8;
-      font-size: 17px;
-    }
+.subtitle {
+  color: #94a3b8;
+  margin-top: 8px;
+}
 
-    .card {
-      background: #1e293b;
-      padding: 25px;
-      border-radius: 18px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
+.card {
+  background: #1e293b;
+  padding: 22px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
 
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
+label {
+  display: block;
+  margin: 15px 0 8px;
+  font-weight: bold;
+}
 
-    textarea,
-    select,
-    input {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      background: #0f172a;
-      color: white;
-      font-size: 16px;
-      outline: none;
-    }
+textarea,
+select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  font-size: 16px;
+}
 
-    textarea {
-      min-height: 150px;
-      resize: vertical;
-    }
+textarea {
+  min-height: 150px;
+  resize: vertical;
+}
 
-    select,
-    input {
-      margin-bottom: 18px;
-    }
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #6366f1;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    button {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 10px;
-      background: #6366f1;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+button:hover {
+  background: #4f46e5;
+}
 
-    button:hover {
-      background: #4f46e5;
-    }
+.result {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 18px;
+  min-height: 180px;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  direction: ltr;
+  text-align: left;
+}
 
-    .result {
-      white-space: pre-wrap;
-      line-height: 1.8;
-      background: #0f172a;
-      padding: 20px;
-      border-radius: 12px;
-      min-height: 120px;
-      color: #e2e8f0;
-    }
+.copy {
+  background: #10b981;
+}
 
-    .copy {
-      margin-top: 12px;
-      background: #10b981;
-    }
+.copy:hover {
+  background: #059669;
+}
 
-    .copy:hover {
-      background: #059669;
-    }
+.clear {
+  background: #475569;
+}
 
-    .footer {
-      text-align: center;
-      color: #64748b;
-      margin-top: 30px;
-      font-size: 14px;
-    }
-  </style>
+.footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 25px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="header">
-      <h1>🚀 Prompt Pilot</h1>
-      <p>حوّل فكرتك البسيطة إلى Prompt احترافي</p>
+  <div class="header">
+    <div class="logo">🚀 Prompt Pilot</div>
+    <div class="subtitle">
+      حوّل فكرتك إلى Prompt احترافي جاهز للاستخدام
     </div>
+  </div>
 
-    <div class="card">
+  <div class="card">
 
-      <label>💡 اكتب فكرتك</label>
+    <label>💡 فكرتك</label>
 
-      <textarea
-        id="idea"
-        placeholder="مثال: أريد عمل فيديو عن الذكاء الاصطناعي..."
-      ></textarea>
+    <textarea
+      id="idea"
+      placeholder="اكتب فكرتك هنا..."
+    ></textarea>
 
-      <label>🎯 نوع المحتوى</label>
+    <label>🎯 نوع المحتوى</label>
 
-      <select id="type">
-        <option value="general">عام</option>
-        <option value="image">توليد صورة</option>
-        <option value="video">توليد فيديو</option>
-        <option value="youtube">يوتيوب</option>
-        <option value="marketing">تسويق وإعلان</option>
-        <option value="business">بيزنس</option>
-        <option value="social">سوشيال ميديا</option>
-      </select>
+    <select id="type">
+      <option value="عام">عام</option>
+      <option value="صورة">توليد صورة</option>
+      <option value="فيديو">توليد فيديو</option>
+      <option value="يوتيوب">YouTube</option>
+      <option value="تسويق">تسويق وإعلان</option>
+      <option value="بيزنس">Business</option>
+      <option value="سوشيال ميديا">Social Media</option>
+    </select>
 
-      <label>🤖 الأداة المستهدفة</label>
+    <label>🤖 الأداة المستهدفة</label>
 
-      <select id="tool">
-        <option value="ChatGPT">ChatGPT</option>
-        <option value="Gemini">Gemini</option>
-        <option value="Claude">Claude</option>
-        <option value="Midjourney">Midjourney</option>
-        <option value="Image AI">Image AI</option>
-        <option value="Video AI">Video AI</option>
-      </select>
+    <select id="tool">
+      <option value="ChatGPT">ChatGPT</option>
+      <option value="Gemini">Gemini</option>
+      <option value="Claude">Claude</option>
+      <option value="Midjourney">Midjourney</option>
+      <option value="Image AI">Image AI</option>
+      <option value="Video AI">Video AI</option>
+    </select>
 
-      <button onclick="generatePrompt()">
-        ✨ إنشاء Prompt احترافي
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <label>📋 النتيجة</label>
-
-      <div id="result" class="result">
-        الـ Prompt سيظهر هنا...
-      </div>
-
-      <button class="copy" onclick="copyPrompt()">
-        📋 نسخ الـ Prompt
-      </button>
-
-    </div>
-
-    <div class="footer">
-      Prompt Pilot © 2026
-    </div>
+    <button onclick="generatePrompt()">
+      ✨ إنشاء Prompt
+    </button>
 
   </div>
 
-  <script>
+  <div class="card">
 
-    function generatePrompt() {
+    <label>📋 الـ Prompt الناتج</label>
 
-      const idea = document.getElementById("idea").value.trim();
-      const type = document.getElementById("type").value;
-      const tool = document.getElementById("tool").value;
-      const result = document.getElementById("result");
+    <div id="result" class="result">
+      سيظهر الـPrompt هنا...
+    </div>
 
-      if (!idea) {
-        result.innerText = "⚠️ اكتب فكرتك أولاً.";
-        return;
-      }
+    <button class="copy" onclick="copyPrompt()">
+      📋 نسخ الـPrompt
+    </button>
 
-      let prompt = "";
+    <button class="clear" onclick="clearAll()">
+      🗑️ مسح
+    </button>
 
-      prompt += "أنت خبير محترف في كتابة الـ Prompts.\\n\\n";
+  </div>
 
-      prompt += "المهمة:\\n";
-      prompt += idea + "\\n\\n";
+  <div class="footer">
+    Prompt Pilot © 2026
+  </div>
 
-      prompt += "نوع المحتوى: ";
-      prompt += type + "\\n\\n";
+</div>
 
-      prompt += "الأداة المستهدفة: ";
-      prompt += tool + "\\n\\n";
+<script>
 
-      prompt += "التعليمات:\\n";
-      prompt += "- افهم الهدف الأساسي من الفكرة.\\n";
-      prompt += "- حسّن الفكرة وحوّلها إلى Prompt واضح ومحدد.\\n";
-      prompt += "- استخدم تفاصيل عملية قابلة للتنفيذ.\\n";
-      prompt += "- لا تضف معلومات غير مطلوبة.\\n";
-      prompt += "- اجعل النتيجة احترافية ومناسبة للأداة المستهدفة.\\n";
-      prompt += "- إذا كانت هناك معلومات ناقصة، استخدم أفضل افتراض منطقي.\\n\\n";
+function generatePrompt() {
 
-      prompt += "أخرج النتيجة كـ Prompt جاهز للنسخ والاستخدام.";
+  const idea = document.getElementById("idea").value.trim();
+  const type = document.getElementById("type").value;
+  const tool = document.getElementById("tool").value;
+  const result = document.getElementById("result");
 
-      result.innerText = prompt;
-    }
+  if (!idea) {
+    result.textContent = "⚠️ اكتب فكرتك أولاً.";
+    return;
+  }
 
-    function copyPrompt() {
+  const prompt =
+`You are an expert prompt engineer.
 
-      const text = document.getElementById("result").innerText;
+OBJECTIVE:
+${idea}
 
-      navigator.clipboard.writeText(text)
-        .then(() => {
-          alert("✅ تم نسخ الـ Prompt");
-        })
-        .catch(() => {
-          alert("❌ لم يتم النسخ تلقائياً");
-        });
+CONTENT TYPE:
+${type}
 
-    }
+TARGET AI TOOL:
+${tool}
 
-  </script>
+ROLE:
+Act as a professional expert specialized in creating high-quality prompts for the selected AI tool.
+
+INSTRUCTIONS:
+1. Understand the user's objective.
+2. Improve and structure the idea.
+3. Add useful details when necessary.
+4. Keep the original intent unchanged.
+5. Make the prompt specific and actionable.
+6. Optimize the prompt for the selected AI tool.
+7. Avoid unnecessary information.
+8. Produce a professional result ready to copy and use.
+
+OUTPUT:
+Return only the final optimized prompt.`;
+
+  result.textContent = prompt;
+}
+
+function copyPrompt() {
+
+  const text = document.getElementById("result").textContent;
+
+  if (!text || text === "سيظهر الـPrompt هنا...") {
+    alert("⚠️ أنشئ Prompt أولاً.");
+    return;
+  }
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      alert("✅ تم نسخ الـPrompt");
+    })
+    .catch(() => {
+      alert("❌ تعذر النسخ تلقائيًا.");
+    });
+}
+
+function clearAll() {
+
+  document.getElementById("idea").value = "";
+
+  document.getElementById("result").textContent =
+    "سيظهر الـPrompt هنا...";
+}
+
+</script>
 
 </body>
-        </html>
+</html>
