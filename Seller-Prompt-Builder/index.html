@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Seller Prompt Builder for digital-product sellers.">
+<title>Seller Prompt Builder</title>
+<style>
+:root{--bg:#0b1020;--card:#121a2e;--line:#293653;--text:#eef2ff;--muted:#9aa7c2;--accent:#7658ff}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#080d19,#111a30);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+.wrap{max-width:960px;margin:auto;padding:28px 16px}
+.hero{text-align:center;padding:20px 0}
+.hero h1{font-size:38px;margin:0 0 10px}
+.hero p{color:var(--muted);line-height:1.6}
+.card{background:#121a2e;border:1px solid var(--line);border-radius:18px;padding:22px;margin:18px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-weight:800;margin:14px 0 7px}
+input,textarea,select{width:100%;background:#080d19;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit}
+textarea{min-height:120px}
+button{border:0;border-radius:10px;padding:12px 16px;font-weight:850;cursor:pointer;background:var(--accent);color:white;margin:12px 7px 0 0}
+.alt{background:#293653!important}
+.out{white-space:pre-wrap;line-height:1.65;background:#080d19;border:1px solid var(--line);border-radius:12px;padding:17px;min-height:260px}
+.small{font-size:13px;color:var(--muted);line-height:1.6}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:13px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.hero h1{font-size:30px}}
+</style>
+</head>
+
+<body>
+<main class="wrap">
+
+<section class="hero">
+<h1>⚡ Seller Prompt Builder</h1>
+<p>Build structured AI prompts for digital-product research, listings, SEO, positioning and launch — directly in your browser.</p>
+
+<div class="badges">
+<span class="badge">No API key</span>
+<span class="badge">No subscription</span>
+<span class="badge">Works offline</span>
+<span class="badge">GitHub Pages ready</span>
+</div>
+</section>
+
+<section class="card">
+
+<div class="grid">
+
+<div>
+<label>Product / Offer</label>
+<input id="product" placeholder="e.g. printable budget planner">
+</div>
+
+<div>
+<label>Marketplace</label>
+<select id="market">
+<option>Etsy</option>
+<option>Shopify</option>
+<option>Gumroad</option>
+<option>General</option>
+</select>
+</div>
+
+</div>
+
+<label>Target customer</label>
+<input id="customer" placeholder="Who is this for?">
+
+<label>Desired result</label>
+<input id="goal" placeholder="What result should the customer get?">
+
+<label>Task</label>
+
+<select id="task">
+<option>Product idea research</option>
+<option>Listing title + description</option>
+<option>SEO keywords and tags</option>
+<option>Product positioning</option>
+<option>Social media launch</option>
+<option>Email promotion</option>
+<option>Competitor analysis</option>
+<option>Product launch plan</option>
+</select>
+
+<label>Extra details</label>
+<textarea id="extra" placeholder="Features, price, style, constraints, language, etc."></textarea>
+
+<button onclick="build()">✨ Build Prompt</button>
+<button class="alt" onclick="copyOut()">📋 Copy</button>
+<button class="alt" onclick="downloadOut()">⬇️ Download TXT</button>
+
+</section>
+
+<section class="card">
+<div class="small">Generated prompt</div>
+<div id="out" class="out">Your prompt will appear here.</div>
+</section>
+
+<section class="card">
+<b>Workflow library</b>
+<p class="small">
+Research • listing copy • SEO • positioning • social launch • email • competitor analysis • product launch planning.
+</p>
+</section>
+
+</main>
+
+<script>
+
+const tasks={
+
+"Product idea research":
+"Research profitable product opportunities for the target marketplace. Compare demand signals, customer pain points, competition, differentiation, pricing logic and execution difficulty. Rank opportunities and give practical next actions.",
+
+"Listing title + description":
+"Create a high-converting marketplace listing with several title options, a benefit-led description, feature bullets, FAQs and a CTA. Avoid keyword stuffing and unsupported claims.",
+
+"SEO keywords and tags":
+"Build an SEO keyword and tag strategy around the product and customer intent. Group primary, secondary and long-tail terms, explain search intent, then recommend a title/tag structure.",
+
+"Product positioning":
+"Define the strongest positioning. Identify the problem, ideal customer, desired outcome, differentiators, objections and concise value proposition.",
+
+"Social media launch":
+"Create a launch campaign with hooks, short-form post ideas, captions, CTAs and a simple publishing sequence tailored to the target customer.",
+
+"Email promotion":
+"Create a short email campaign that introduces the problem, presents the offer, handles objections and drives action. Include subject lines and preview text.",
+
+"Competitor analysis":
+"Analyze the competitive landscape conceptually. Identify common offers, messaging patterns, gaps, differentiation opportunities and risks. Separate facts from assumptions.",
+
+"Product launch plan":
+"Build a practical launch plan from validation to publication and optimization. Include MVP scope, offer, listing assets, traffic plan, measurement and iteration."
+
+};
+
+function build(){
+
+const p=document.getElementById("product").value.trim();
+
+if(!p){
+alert("Enter a product or offer first.");
+return;
+}
+
+const m=document.getElementById("market").value;
+const c=document.getElementById("customer").value.trim();
+const g=document.getElementById("goal").value.trim();
+const t=document.getElementById("task").value;
+const e=document.getElementById("extra").value.trim();
+
+document.getElementById("out").textContent=`ROLE
+You are a senior digital-product and marketplace strategist.
+
+CONTEXT
+Product/offer: ${p}
+Marketplace: ${m}
+Customer: ${c||"Define the most likely customer and clearly state the assumption."}
+Desired outcome: ${g||"Clarify the most important customer outcome."}
+
+TASK
+${tasks[t]}
+
+CONSTRAINTS
+- Prioritize practical, low-cost execution.
+- Do not invent market data, reviews, sales, platform rules or capabilities.
+- Label assumptions clearly.
+- Make recommendations specific to the product and customer.
+- Prefer actions that can be tested quickly.
+
+EXTRA DETAILS
+${e||"None supplied."}
+
+OUTPUT
+Use clear headings and concise tables where useful.
+Finish with the 3 highest-priority actions.`;
+
+}
+
+function copyOut(){
+navigator.clipboard.writeText(
+document.getElementById("out").textContent
+);
+}
+
+function downloadOut(){
+
+const b=new Blob(
+[document.getElementById("out").textContent],
+{type:"text/plain;charset=utf-8"}
+);
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(b);
+a.download="seller-prompt.txt";
+a.click();
+
+URL.revokeObjectURL(a.href);
+
+}
+
+</script>
+
+</body>
+             </html>
